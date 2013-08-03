@@ -1,4 +1,4 @@
-function play() {	
+function play() {
 	
 	// Frame rate definition
 	var fps = 100;
@@ -19,7 +19,7 @@ function play() {
 	
 	//
 	var my_bro_pos = [];
-	var my_bro_id.push([ Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) ]);
+	my_bro_pos.push([ Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) ]);
 
 	var id_time = new Date().getTime();
 	var id_random = Math.floor(Math.random()*100000);
@@ -65,11 +65,13 @@ function play() {
 	bro_list.push({bro_id: "456", bro_pos: [230, 300]});
 	bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
 	*/
+	
 	var socket = io.connect('http://localhost');
 	socket.on('bro_list', function (data) {
 		console.log(data);
 		socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
 	});
+	
 	/*
 	function updateBros(bro_list) {
 		// send my_bro position
