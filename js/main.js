@@ -6,7 +6,7 @@ function play() {
 	var then = Date.now();
 	var interval = 1000 / fps;
 	var delta;
-		
+	
 	// Init
 	var c = document.getElementById('c');
 	var ctx = c.getContext('2d');
@@ -19,7 +19,8 @@ function play() {
 	
 	//
 	var my_bro_pos = [];
-	
+	var my_bro_id.push([ Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) ]);
+
 	var id_time = new Date().getTime();
 	var id_random = Math.floor(Math.random()*100000);
 	var my_bro_id = id_time + "" + id_random;
@@ -57,13 +58,19 @@ function play() {
 		}
 	}
 
-	//TODO Bros to server over ajax	
+	// Bro to server
 	var bro_list = [];
+	/*
 	bro_list.push({bro_id: "123", bro_pos: [50, 160]});
 	bro_list.push({bro_id: "456", bro_pos: [230, 300]});
 	bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
-
-	
+	*/
+	var socket = io.connect('http://localhost');
+	socket.on('bro_list', function (data) {
+		console.log(data);
+		socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
+	});
+	/*
 	function updateBros(bro_list) {
 		// send my_bro position
 		console.log("informations send to server");
@@ -74,9 +81,11 @@ function play() {
 			console.log("got Bros from server:", response);
 			bro_list = response;
 		});
+		
 	}
 	setTimeout(updateBros, 1000);
-
+	*/
+	
 	// draw loop
 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 	window.requestAnimationFrame = requestAnimationFrame;
