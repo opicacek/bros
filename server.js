@@ -17,11 +17,16 @@ function handler (req, res) {
 	});
 }
 
-var bro_list = [];
+var bro_list = {};
 
 io.sockets.on('connection', function (socket) {
 	socket.on('bro', function (data) {
-		bro_list.push(data);
-		socket.emit('bro_list', bro_list);
+		bro_list[data.bro_id] = data.bro_pos;
 	});
 });
+
+function updateBros() {
+	io.sockets.emit('bro_list', bro_list);
+	setTimeout(updateBros, 1000);
+}
+updateBros();
