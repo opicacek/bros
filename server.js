@@ -21,6 +21,12 @@ var bro_list = {};
 
 io.sockets.on('connection', function (socket) {
 	socket.on('bro', function (data) {
+		if (bro_list[data.bro_id] == undefined) {
+			console.log('set disconnect');
+			socket.on('disconnect', function () {
+				bro_list[data.bro_id] = undefined;
+		    });
+		}
 		bro_list[data.bro_id] = data.bro_pos;
 	});
 });
