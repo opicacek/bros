@@ -11,7 +11,7 @@
 			function play() {
 				
 				// Frame rate definition
-				var fps = 100;
+				var fps = 50;
 				var now;
 				var then = Date.now();
 				var interval = 1000 / fps;
@@ -29,7 +29,7 @@
 				
 				//
 				var my_bro_pos = [];
-				my_bro_pos.push([ Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) ]);
+				my_bro_pos.push( Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) );
 
 				var id_time = new Date().getTime();
 				var id_random = Math.floor(Math.random()*100000);
@@ -52,15 +52,18 @@
 				
 				function drawBros(bro_list) {
 					
-					for (var i = 0; i < bro_list.length; i++) {
-						var centerX = bro_list[i].bro_pos[0] / 2;
-						var centerY = bro_list[i].bro_pos[1] / 2;
+					//for (var i = 0; i < bro_list.length; i++) {
+					//for (var i = 0; i < bro_list.length; i++) {
+					for (var bro_key in bro_list) {
+						var centerX = bro_list[bro_key][0];
+						var centerY = bro_list[bro_key][1];
 						var radius = 10;
 
 						ctx.beginPath();
 						ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+						//console.log(centerX, centerY);
 						ctx.fillStyle = "rgb(255, 0, 0)";
-						if (bro_list[i].bro_id == my_bro_id) {
+						if (bro_key == my_bro_id) {
 							ctx.fillStyle = "rgb(0, 255, 0)";
 						}
 						
@@ -69,14 +72,14 @@
 				}
 
 				// Bro to server
-				var bro_list = [];
+				var bro_list;
 				/*
 				bro_list.push({bro_id: "123", bro_pos: [50, 160]});
 				bro_list.push({bro_id: "456", bro_pos: [230, 300]});
 				bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
 				*/
 				
-				var socket = io.connect('http://localhost');
+				var socket = io.connect('192.168.2.102');
 				/*socket.on('bro_list', function (data) {
 					console.log("got Bros from server:", data);
 					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
@@ -88,10 +91,10 @@
 					bro_list = data;
 				});
 
-				function updateBros(bro_list) {
+				function updateBros() {
 					// send my_bro position
 					console.log("informations send to server");
-					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]}, function(response) {
+					socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos}, function(response) {
 						console.log(response);
 					});
 
