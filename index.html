@@ -77,17 +77,20 @@
 				*/
 				
 				var socket = io.connect('http://localhost');
-				socket.on('bro_list', function (data) {
+				/*socket.on('bro_list', function (data) {
 					console.log("got Bros from server:", data);
 					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
-				});
+				});*/
 				
+				// get positions of all Bros
+				socket.on('bro_list', function (data) {
+					console.log("got Bros from server:", data);
+					bro_list = response;
+				});
+
 				function updateBros(bro_list) {
 					// send my_bro position
-					socket.on('bro_list', function (data) {
-						console.log("got Bros from server:", data);
-						socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
-					});
+					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
 
 					/*
 					console.log("informations send to server");
