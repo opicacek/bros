@@ -81,7 +81,7 @@
 				bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
 				*/
 				
-				var socket = io.connect('192.168.2.102'); //TODO
+				var socket = io.connect('localhost'); //TODO
 				/*socket.on('bro_list', function (data) {
 					console.log("got Bros from server:", data);
 					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
