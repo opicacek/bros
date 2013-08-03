@@ -22,7 +22,6 @@ var bro_list = {};
 io.sockets.on('connection', function (socket) {
 	socket.on('bro', function (data) {
 		if (bro_list[data.bro_id] == undefined) {
-			console.log('set disconnect');
 			socket.on('disconnect', function () {
 				bro_list[data.bro_id] = undefined;
 		    });
@@ -33,6 +32,6 @@ io.sockets.on('connection', function (socket) {
 
 function updateBros() {
 	io.sockets.emit('bro_list', bro_list);
-	setTimeout(updateBros, 1000);
+	setTimeout(updateBros, 20);
 }
 updateBros();
