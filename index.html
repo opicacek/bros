@@ -85,12 +85,15 @@
 				// get positions of all Bros
 				socket.on('bro_list', function (data) {
 					console.log("got Bros from server:", data);
-					bro_list = response;
+					bro_list = data;
 				});
 
 				function updateBros(bro_list) {
 					// send my_bro position
-					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
+					console.log("informations send to server");
+					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]}, function(response) {
+						console.log(response);
+					});
 
 					/*
 					console.log("informations send to server");
@@ -102,9 +105,9 @@
 						bro_list = response;
 					});
 					*/
-					
+					setTimeout(updateBros, 1000);
 				}
-				setTimeout(updateBros, 1000);
+				updateBros();
 				
 				// draw loop
 				var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
