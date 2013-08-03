@@ -36,10 +36,12 @@
 				var my_bro_id = id_time + "" + id_random;
 				
 				//
-				document.onmousedown = mouseDown;
-				function mouseDown(event) {
-					if (event.button == 0) { // left click
-						console.log("left click");
+				c.onmousedown = mouseDown;
+				function mouseDown(e) {
+					if (e.button == 0) { // left click
+						var mouse_x = event.clientX-document.documentElement.scrollLeft-c.offsetLeft;
+						var mouse_y = event.clientY-document.documentElement.scrollTop-c.offsetTop;
+						console.log(mouse_x, mouse_y);
 						//TODO get click position
 					}
 				}
@@ -79,7 +81,7 @@
 				bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
 				*/
 				
-				var socket = io.connect('192.168.2.102');
+				var socket = io.connect('192.168.2.102'); //TODO
 				/*socket.on('bro_list', function (data) {
 					console.log("got Bros from server:", data);
 					socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
@@ -94,9 +96,7 @@
 				function updateBros() {
 					// send my_bro position
 					console.log("informations send to server");
-					socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos}, function(response) {
-						console.log(response);
-					});
+					socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
 
 					/*
 					console.log("informations send to server");
@@ -149,7 +149,7 @@
 			}
 			canvas {
 				outline: 0;
-				border: 1px solid #000;
+				border: 0px;
 				margin-left: auto;
 				margin-right: auto;
 			}
