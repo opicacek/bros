@@ -3,6 +3,9 @@ var app = require('http').createServer(handler),
 	static = require('node-static'),
 	engine = require('./js/engine'); // for serving files
 
+var en = new engine.Engine()
+console.log(en.hello())
+
 // This will make all the files in the current folder
 // accessible from the web
 var fileServer = new static.Server('./');
@@ -38,7 +41,7 @@ function handler (req, res) {
 	});
 }
 */
-var bro_list = {};
+var bro_list = {};	
 
 io.sockets.on('connection', function (socket) {
 	socket.on('bro', function (data) {
@@ -47,12 +50,15 @@ io.sockets.on('connection', function (socket) {
 				bro_list[data.bro_id] = undefined;
 		    });
 		}
+		console.log(data);
 		bro_list[data.bro_id] = data;
 	});
 });
 
 function updateBros() {
-	
+	for (var bro in bro_list) {
+		en.moveBro(bro_list[bro]);
+	}
 	io.sockets.emit('bro_list', bro_list);
 	setTimeout(updateBros, 20);
 }
