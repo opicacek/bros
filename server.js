@@ -21,15 +21,13 @@ function handler (request, response) {
 io.sockets.on('connection', function (socket) {
 	var socket_id;
 	socket.on('add_bro', function (data) {
-		socket.on('disconnect', function () {
-			// en.bro_list[data.id] = undefined;
-			delete en.bro_list[data.id];
-	    });
 		socket_id = data.id;
 		en.bro_list[data.id] = data;
+		socket.on('disconnect', function () {
+			en.pipeline[data.id] = {deleteBro: socket_id};
+	    });
 	});
 	socket.on('update_bro', function (commands) {
-		console.log(socket_id);
 		if (en.bro_list[socket_id] != undefined) {
 			en.pipeline[socket_id] = commands;
 		}
@@ -37,8 +35,6 @@ io.sockets.on('connection', function (socket) {
 });
 
 function updateBros() {
-
-	console.log(en.bro_list);
 	io.sockets.emit('bro_list', en.bro_list);
 	en.process();
 	setTimeout(updateBros, 20);
