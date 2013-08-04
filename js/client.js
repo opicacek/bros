@@ -1,7 +1,7 @@
 function play() {
 	
 	// Frame rate definition
-	var fps = 100;
+	var fps = 50;
 	var now;
 	var then = Date.now();
 	var interval = 1000 / fps;
@@ -19,18 +19,24 @@ function play() {
 	
 	//
 	var my_bro_pos = [];
-	my_bro_pos.push([ Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) ]);
+	my_bro_pos.push( Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) );
 
 	var id_time = new Date().getTime();
 	var id_random = Math.floor(Math.random()*100000);
 	var my_bro_id = id_time + "" + id_random;
+	var my_bro_goal = my_bro_pos;
 	
 	//
-	document.onmousedown = mouseDown;
-	function mouseDown(event) {
-		if (event.button == 0) { // left click
-			console.log("left click");
-			//TODO get click position
+	c.onmousedown = mouseDown;
+	function mouseDown(e) {
+		if (e.button == 0) { // left click
+			// get click position
+			var mouse_x = event.clientX-document.documentElement.scrollLeft-c.offsetLeft;
+			var mouse_y = event.clientY-document.documentElement.scrollTop-c.offsetTop;
+			//console.log(mouse_x, mouse_y);
+
+			// set goal fro Bro
+			my_bro_goal = [mouse_x, mouse_y];
 		}
 	}
 
@@ -42,15 +48,18 @@ function play() {
 	
 	function drawBros(bro_list) {
 		
-		for (var i = 0; i < bro_list.length; i++) {
-			var centerX = bro_list[i].bro_pos[0] / 2;
-			var centerY = bro_list[i].bro_pos[1] / 2;
+		//for (var i = 0; i < bro_list.length; i++) {
+		//for (var i = 0; i < bro_list.length; i++) {
+		for (var bro_key in bro_list) {
+			var centerX = bro_list[bro_key][0];
+			var centerY = bro_list[bro_key][1];
 			var radius = 10;
 
 			ctx.beginPath();
 			ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+			//console.log(centerX, centerY);
 			ctx.fillStyle = "rgb(255, 0, 0)";
-			if (bro_list[i].bro_id == my_bro_id) {
+			if (bro_key == my_bro_id) {
 				ctx.fillStyle = "rgb(0, 255, 0)";
 			}
 			
@@ -59,34 +68,30 @@ function play() {
 	}
 
 	// Bro to server
-	var bro_list = [];
-	/*
-	bro_list.push({bro_id: "123", bro_pos: [50, 160]});
-	bro_list.push({bro_id: "456", bro_pos: [230, 300]});
-	bro_list.push({bro_id: my_bro_id, bro_pos: [500, 260]});
-	*/
+	var bro_list;
+
+	var socket = io.connect('192.168.2.102'); //TODO
+	//var socket = io.connect('localhost'); //TODO
+
 	
-	var socket = io.connect('http://localhost');
+	// get positions of all Bros
 	socket.on('bro_list', function (data) {
-		console.log(data);
-		socket.emit('bro', {bro_id: my_bro_id, bro_pos: [500, 260]});
+		//console.log("got Bros from server:", data);
+		bro_list = data;
+
+		// TODO logical steps
+		// move Bro
+		my_bro_pos = my_bro_goal;
 	});
-	
-	/*
-	function updateBros(bro_list) {
-		// send my_bro position
-		console.log("informations send to server");
-		$.post('server/', {bro_id: my_bro_id, bro_pos: my_bro_pos});
-		
-		// get positions of all Bros
-		$.get('server/', {}, function(response) {
-			console.log("got Bros from server:", response);
-			bro_list = response;
-		});
-		
+
+	// send Bro position to server
+	function updateBros() {
+		//console.log("informations send to server");
+		socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
+
+		setTimeout(updateBros, 20);
 	}
-	setTimeout(updateBros, 1000);
-	*/
+	updateBros();
 	
 	// draw loop
 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
