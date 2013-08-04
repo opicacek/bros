@@ -31,8 +31,8 @@ function play() {
 	function mouseDown(e) {
 		if (e.button == 0) { // left click
 			// get click position
-			var mouse_x = event.clientX-document.documentElement.scrollLeft-c.offsetLeft;
-			var mouse_y = event.clientY-document.documentElement.scrollTop-c.offsetTop;
+			var mouse_x = event.pageX - document.documentElement.scrollLeft - c.offsetLeft;
+			var mouse_y = event.pageY - document.documentElement.scrollTop - c.offsetTop;
 			//console.log(mouse_x, mouse_y);
 
 			// set goal fro Bro
@@ -48,8 +48,6 @@ function play() {
 	
 	function drawBros(bro_list) {
 		
-		//for (var i = 0; i < bro_list.length; i++) {
-		//for (var i = 0; i < bro_list.length; i++) {
 		for (var bro_key in bro_list) {
 			var centerX = bro_list[bro_key][0];
 			var centerY = bro_list[bro_key][1];
