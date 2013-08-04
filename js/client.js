@@ -92,11 +92,9 @@ function play() {
 		//console.log("informations send to server");
 		//socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
 		//socket.emit('bro', {bro: my_bro});
-		
-		console.log(my_bro.pos[0]);
-		
+				
 		//socket.emit('update_bro', my_bro);
-		socket.emit('update_bro', {move_bro: my_bro.goal_pos});
+		socket.emit('update_bro', {moveBro: my_bro.goal_pos});
 
 		setTimeout(updateBros, 20);
 	}
