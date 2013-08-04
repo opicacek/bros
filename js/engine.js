@@ -3,6 +3,7 @@ function Engine() {
 	this.pipeline = {};
 }
 Engine.prototype.moveBro = function(socket_id, position) {
+	// console.log(this.bro_list)
 	var bro = this.bro_list[socket_id];
 	if (bro.pos[0] < position[0]) {
 		bro.pos[0] += 1;
