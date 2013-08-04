@@ -18,13 +18,14 @@ function play() {
 	var screen_h = c.height;
 	
 	//
-	var my_bro_pos = [];
-	my_bro_pos.push( Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) );
+	var my_bro = new Bro();
+	my_bro.pos.push( Math.floor(Math.random()*screen_w), Math.floor(Math.random()*screen_h) );
 
+	//TODO same id for user all the time, get from local storage
 	var id_time = new Date().getTime();
 	var id_random = Math.floor(Math.random()*100000);
-	var my_bro_id = id_time + "" + id_random;
-	var my_bro_goal = my_bro_pos;
+	my_bro.id = id_time + "" + id_random;
+	my_bro.goal_pos = my_bro.pos;
 	
 	//
 	c.onmousedown = mouseDown;
@@ -36,7 +37,7 @@ function play() {
 			//console.log(mouse_x, mouse_y);
 
 			// set goal fro Bro
-			my_bro_goal = [mouse_x, mouse_y];
+			my_bro.goal_pos = [mouse_x, mouse_y];
 		}
 	}
 
@@ -49,15 +50,18 @@ function play() {
 	function drawBros(bro_list) {
 		
 		for (var bro_key in bro_list) {
-			var centerX = bro_list[bro_key][0];
-			var centerY = bro_list[bro_key][1];
+		//for (var i = 0; i < bro_list.length; i++) {
+			//var centerX = bro_list[bro_key][0];
+			//var centerY = bro_list[bro_key][1];
+			var centerX = bro_list[bro_key].pos[0];
+			var centerY = bro_list[bro_key].pos[1];
 			var radius = 10;
 
 			ctx.beginPath();
 			ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 			//console.log(centerX, centerY);
 			ctx.fillStyle = "rgb(255, 0, 0)";
-			if (bro_key == my_bro_id) {
+			if (bro_key == my_bro.id) {
 				ctx.fillStyle = "rgb(0, 255, 0)";
 			}
 			
@@ -68,24 +72,26 @@ function play() {
 	// Bro to server
 	var bro_list;
 
-	// var socket = io.connect('192.168.2.102'); //TODO
-	var socket = io.connect('localhost'); //TODO
+	var socket = io.connect('192.168.2.102'); //TODO
+	//var socket = io.connect('localhost'); //TODO
 
 	
 	// get positions of all Bros
 	socket.on('bro_list', function (data) {
 		//console.log("got Bros from server:", data);
-		bro_list = data;
+		bro_list = data; //TODO dont drop bro_list
 
-		// TODO logical steps
+		// TODO logical steps - leave it to server
 		// move Bro
-		my_bro_pos = my_bro_goal;
+		//my_bro.pos = my_bro_goal;
 	});
 
 	// send Bro position to server
 	function updateBros() {
 		//console.log("informations send to server");
-		socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
+		//socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
+		//socket.emit('bro', {bro: my_bro});
+		socket.emit('bro', my_bro);
 
 		setTimeout(updateBros, 20);
 	}
