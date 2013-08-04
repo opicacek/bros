@@ -4,7 +4,6 @@ var app = require('http').createServer(handler),
 	engine = require('./js/engine'); // for serving files
 
 var en = new engine.Engine()
-console.log(en.hello())
 
 // This will make all the files in the current folder
 // accessible from the web
@@ -41,25 +40,24 @@ function handler (req, res) {
 	});
 }
 */
-var bro_list = {};	
 
 io.sockets.on('connection', function (socket) {
-	socket.on('bro', function (data) {
-		if (bro_list[data.bro_id] == undefined) {
-			socket.on('disconnect', function () {
-				bro_list[data.bro_id] = undefined;
-		    });
-		}
-		console.log(data);
-		bro_list[data.bro_id] = data;
+	var socket_id;
+	socket.on('add_bro', function (data) {
+		socket.on('disconnect', function () {
+			en.bro_list[data.bro_id] = undefined;
+	    });
+		socket_id = data.bro_id;
+		en.bro_list[data.bro_id] = data;
+	});
+	socket.on('update_bro', function (commands) {
+		en.pipeline[socket_id] = commands;
 	});
 });
 
 function updateBros() {
-	for (var bro in bro_list) {
-		en.moveBro(bro_list[bro]);
-	}
-	io.sockets.emit('bro_list', bro_list);
+	io.sockets.emit('bro_list', en.bro_list);
+	en.process();
 	setTimeout(updateBros, 20);
 }
 updateBros();
