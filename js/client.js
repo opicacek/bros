@@ -68,8 +68,8 @@ function play() {
 	// Bro to server
 	var bro_list;
 
-	var socket = io.connect('192.168.2.102'); //TODO
-	//var socket = io.connect('localhost'); //TODO
+	// var socket = io.connect('192.168.2.102'); //TODO
+	var socket = io.connect('localhost'); //TODO
 
 	
 	// get positions of all Bros

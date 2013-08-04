@@ -12,9 +12,7 @@ app.listen(8080);
 
 // If the URL of the socket server is opened in a browser
 function handler (request, response) {
-	request.addListener('end', function () {
-		fileServer.serve(request, response); // this will return the correct file
-	});
+	fileServer.serve(request, response); // this will return the correct file
 }
 
 //TODO old version, can be deleted now
