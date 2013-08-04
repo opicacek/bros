@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler),
 	io = require('socket.io').listen(app),
-	static = require('node-static'); // for serving files
+	static = require('node-static'),
+	engine = require('./js/engine'); // for serving files
 
 // This will make all the files in the current folder
 // accessible from the web
@@ -46,11 +47,12 @@ io.sockets.on('connection', function (socket) {
 				bro_list[data.bro_id] = undefined;
 		    });
 		}
-		bro_list[data.bro_id] = data.bro_pos;
+		bro_list[data.bro_id] = data;
 	});
 });
 
 function updateBros() {
+	
 	io.sockets.emit('bro_list', bro_list);
 	setTimeout(updateBros, 20);
 }
