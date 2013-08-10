@@ -50,9 +50,6 @@ function play() {
 	function drawBros(bro_list) {
 		
 		for (var bro_key in bro_list) {
-		//for (var i = 0; i < bro_list.length; i++) {
-			//var centerX = bro_list[bro_key][0];
-			//var centerY = bro_list[bro_key][1];
 						
 			var centerX = bro_list[bro_key].pos[0];
 			var centerY = bro_list[bro_key].pos[1];
@@ -73,8 +70,8 @@ function play() {
 	// Bro to server
 	var bro_list;
 
-	// var socket = io.connect('192.168.2.106'); //TODO
-	var socket = io.connect('localhost'); //TODO
+	var socket = io.connect('192.168.2.102'); //TODO
+	//var socket = io.connect('localhost'); //TODO
 	socket.emit('add_bro', my_bro);
 	
 	// get positions of all Bros
@@ -90,8 +87,6 @@ function play() {
 	// send Bro position to server
 	function updateBros() {
 		//console.log("informations send to server");
-		//socket.emit('bro', {bro_id: my_bro_id, bro_pos: my_bro_pos});
-		//socket.emit('bro', {bro: my_bro});
 				
 		//socket.emit('update_bro', my_bro);
 		socket.emit('update_bro', {moveBro: my_bro.goal_pos});
